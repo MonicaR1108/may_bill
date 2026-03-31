@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MasterItemController;
 use App\Http\Controllers\Admin\AdminPasswordResetController;
+use App\Http\Controllers\Admin\ServiceMasterController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\UserDetailsController;
 use App\Http\Controllers\PublicController;
@@ -74,6 +75,24 @@ Route::prefix('admin')->group(function () {
         Route::delete('/master-items/{token}', [MasterItemController::class, 'destroy'])
             ->where('token', '[A-Za-z0-9\\-_]+')
             ->name('admin.master-items.destroy');
+
+        Route::get('/service-master', [ServiceMasterController::class, 'index'])->name('admin.service-master.index');
+        Route::post('/service-master', [ServiceMasterController::class, 'store'])->name('admin.service-master.store');
+        Route::get('/service-master/{token}', [ServiceMasterController::class, 'show'])
+            ->where('token', '[A-Za-z0-9\\-_]+')
+            ->name('admin.service-master.show');
+        Route::get('/service-master/{token}/edit', [ServiceMasterController::class, 'edit'])
+            ->where('token', '[A-Za-z0-9\\-_]+')
+            ->name('admin.service-master.edit');
+        Route::put('/service-master/{token}', [ServiceMasterController::class, 'update'])
+            ->where('token', '[A-Za-z0-9\\-_]+')
+            ->name('admin.service-master.update');
+        Route::put('/service-master/{token}/status', [ServiceMasterController::class, 'updateStatus'])
+            ->where('token', '[A-Za-z0-9\\-_]+')
+            ->name('admin.service-master.status');
+        Route::delete('/service-master/{token}', [ServiceMasterController::class, 'destroy'])
+            ->where('token', '[A-Za-z0-9\\-_]+')
+            ->name('admin.service-master.destroy');
 
         Route::get('/user-details', [UserDetailsController::class, 'index'])->name('admin.user-details.index');
         Route::get('/user-details/create', [UserDetailsController::class, 'create'])->name('admin.user-details.create');

@@ -5,29 +5,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Crypt;
 
-class ItemMaster extends Model
+class ServiceMaster extends Model
 {
-    protected $table = 'item_master';
+    protected $table = 'service_master';
     protected $primaryKey = 'ID';
 
     public $timestamps = false;
 
     protected $fillable = [
-        'ItemName',
+        'ServiceName',
         'Description',
         'Status',
-        'Category',
-        'Price',
-        'service_id',
         'Created_by',
         'Created_on',
         'updated_by',
         'updated_on',
     ];
 
-    public function service()
+    public function items()
     {
-        return $this->belongsTo(Service::class, 'service_id', 'ID');
+        return $this->belongsToMany(ItemMaster::class, 'service_master_items', 'service_id', 'item_id');
     }
 
     public static function idToToken(int $id): string

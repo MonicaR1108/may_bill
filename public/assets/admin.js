@@ -27,6 +27,37 @@
     });
   }
 
+  // Sidebar groups (Masters, etc.).
+  const groupToggles = Array.from(document.querySelectorAll("[data-sidebar-group]"));
+  groupToggles.forEach((btn) => {
+    const groupKey = btn.getAttribute("data-sidebar-group");
+    if (!groupKey) return;
+
+    const group = btn.closest(".sidebar-group");
+    if (!group) return;
+
+    const storageKey = `admin_sidebar_group_${groupKey}`;
+
+    const setOpen = (open) => {
+      group.classList.toggle("sidebar-group-open", open);
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+    };
+
+    const serverOpen = group.classList.contains("sidebar-group-open");
+    const stored = localStorage.getItem(storageKey);
+    if (!serverOpen && stored !== null) {
+      setOpen(stored === "1");
+    } else if (serverOpen) {
+      setOpen(true);
+    }
+
+    btn.addEventListener("click", () => {
+      const next = !group.classList.contains("sidebar-group-open");
+      setOpen(next);
+      localStorage.setItem(storageKey, next ? "1" : "0");
+    });
+  });
+
   if (backdrop) {
     backdrop.addEventListener("click", () => {
       document.body.classList.remove("sidebar-open");

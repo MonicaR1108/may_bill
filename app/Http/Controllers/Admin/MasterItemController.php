@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ItemMaster;
+use App\Models\Service;
 use Illuminate\Support\Facades\Schema;
 
 class MasterItemController extends Controller
@@ -14,6 +15,7 @@ class MasterItemController extends Controller
     {
         $sort = (string) request('sort', '');
         $dir = strtolower((string) request('dir', 'desc')) === 'asc' ? 'asc' : 'desc';
+        $serviceFilter = (int) request('service', 0);
 
         // Sorting is intentionally limited to S.No (ID) only.
         if ($sort !== 'id') {
@@ -28,7 +30,11 @@ class MasterItemController extends Controller
             ? 'Price'
             : (Schema::hasColumn('item_master', 'price') ? 'price' : null);
 
-        $query = ItemMaster::query();
+        $query = ItemMaster::query()->with('service');
+
+        if ($serviceFilter > 0) {
+            $query->where('service_id', $serviceFilter);
+        }
 
         if ($sort === 'id') {
             $query->orderBy('ID', $dir);
@@ -46,12 +52,14 @@ class MasterItemController extends Controller
             'dir' => $dir,
             'hasCategory' => (bool) $categoryColumn,
             'hasPrice' => (bool) $priceColumn,
+            'services' => Service::query()->orderBy('ServiceName')->get(['ID', 'ServiceName', 'Status']),
+            'selectedService' => $serviceFilter,
         ]);
     }
 
     public function show(string $token)
     {
-        $masterItem = $this->findItem($token);
+        $masterItem = $this->findItem($token)->load('service');
 
         return view('admin.master-items.show', [
             'item' => $masterItem,
@@ -60,11 +68,12 @@ class MasterItemController extends Controller
 
     public function edit(string $token)
     {
-        $masterItem = $this->findItem($token);
+        $masterItem = $this->findItem($token)->load('service');
 
         return view('admin.master-items.edit', [
             'item' => $masterItem,
             'token' => $token,
+            'services' => Service::query()->orderBy('ServiceName')->get(['ID', 'ServiceName', 'Status']),
         ]);
     }
 
@@ -74,6 +83,7 @@ class MasterItemController extends Controller
             'name' => ['required', 'string', 'max:190'],
             'description' => ['nullable', 'string', 'max:100'],
             'status' => ['required', 'in:Active,Inactive'],
+            'service_id' => ['required', 'integer', 'exists:services,ID'],
         ]);
 
         $admin = Auth::guard('admin')->user();
@@ -84,6 +94,7 @@ class MasterItemController extends Controller
             'ItemName' => trim($validated['name']),
             'Description' => trim((string) ($validated['description'] ?? '')),
             'Status' => $validated['status'],
+            'service_id' => (int) $validated['service_id'],
             'Created_by' => $by,
             'Created_on' => $today,
             'updated_by' => $by,
@@ -101,6 +112,7 @@ class MasterItemController extends Controller
             'name' => ['required', 'string', 'max:190'],
             'description' => ['nullable', 'string', 'max:100'],
             'status' => ['required', 'in:Active,Inactive'],
+            'service_id' => ['required', 'integer', 'exists:services,ID'],
         ]);
 
         $admin = Auth::guard('admin')->user();
@@ -111,6 +123,7 @@ class MasterItemController extends Controller
             'ItemName' => trim($validated['name']),
             'Description' => trim((string) ($validated['description'] ?? '')),
             'Status' => $validated['status'],
+            'service_id' => (int) $validated['service_id'],
             'updated_by' => $by,
             'updated_on' => $today,
         ]);

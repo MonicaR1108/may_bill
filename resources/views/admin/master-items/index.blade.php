@@ -6,20 +6,38 @@
     @php
         $sort = $sort ?? request('sort', '');
         $dir = $dir ?? request('dir', 'desc');
+        $services = $services ?? collect();
+        $selectedService = (int) ($selectedService ?? request('service', 0));
 
         $toggleDir = fn (string $col) => ($sort === $col && $dir === 'asc') ? 'desc' : 'asc';
         $arrow = function (string $col) use ($sort, $dir) {
             if ($sort !== $col) return '';
             return $dir === 'asc' ? ' ↑' : ' ↓';
         };
-        $sortLink = fn () => route('admin.master-items.index', ['sort' => 'id', 'dir' => $toggleDir('id')]);
+        $sortLink = fn () => route('admin.master-items.index', ['sort' => 'id', 'dir' => $toggleDir('id'), 'service' => $selectedService]);
+        $oldServiceId = (int) old('service_id', 0);
     @endphp
 
     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
         <h1 class="h4 mb-0">Master Items</h1>
-        <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#addMasterItem" aria-expanded="false" aria-controls="addMasterItem">
-            <i class="bi bi-plus-circle me-2"></i>Add Item
-        </button>
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            <form method="GET" action="{{ route('admin.master-items.index') }}" class="d-flex align-items-center gap-2">
+                <label class="text-muted small mb-0">Filter by Service</label>
+                <select name="service" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <option value="0">All Services</option>
+                    @foreach ($services as $service)
+                        <option value="{{ $service->ID }}" @selected($selectedService === (int) $service->ID)>
+                            {{ $service->ServiceName }}
+                        </option>
+                    @endforeach
+                </select>
+                <input type="hidden" name="sort" value="{{ $sort }}">
+                <input type="hidden" name="dir" value="{{ $dir }}">
+            </form>
+            <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#addMasterItem" aria-expanded="false" aria-controls="addMasterItem">
+                <i class="bi bi-plus-circle me-2"></i>Add Item
+            </button>
+        </div>
     </div>
 
     <div class="collapse mb-4" id="addMasterItem">
@@ -62,6 +80,20 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Service</label>
+                        <select name="service_id" class="form-select @error('service_id') is-invalid @enderror" required>
+                            <option value="">Select Service</option>
+                            @foreach ($services as $service)
+                                <option value="{{ $service->ID }}" @selected($oldServiceId === (int) $service->ID)>
+                                    {{ $service->ServiceName }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('service_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
                     <div class="col-12">
                         <button class="btn btn-primary" type="submit">
                             <i class="bi bi-check2-circle me-2"></i>Save Item
@@ -84,7 +116,7 @@
                                 </a>
                             </th>
                             <th>Item Name</th>
-                            <th>Description</th>
+                            <th>Service</th>
                             @if (!empty($hasCategory))
                                 <th>Category</th>
                             @endif
@@ -102,7 +134,13 @@
                             <tr>
                                 <td class="ps-4 text-center">{{ ($items->currentPage() - 1) * $items->perPage() + $loop->iteration }}</td>
                                 <td class="fw-semibold text-nowrap">{{ $item->ItemName }}</td>
-                                <td class="text-muted">{{ $item->Description }}</td>
+                                <td>
+                                    @if ($item->service)
+                                        <span class="badge text-bg-light border text-dark">{{ $item->service->ServiceName }}</span>
+                                    @else
+                                        <span class="text-muted small">Unassigned</span>
+                                    @endif
+                                </td>
                                 @if (!empty($hasCategory))
                                     <td>{{ $item->Category ?? $item->category }}</td>
                                 @endif

@@ -3,7 +3,11 @@
 @section('title', 'Edit Item')
 
 @section('content')
-    @php $token = $token ?? \App\Models\ItemMaster::idToToken((int) $item->ID); @endphp
+    @php
+        $token = $token ?? \App\Models\ItemMaster::idToToken((int) $item->ID);
+        $services = $services ?? collect();
+        $selectedServiceId = (int) old('service_id', $item->service_id ?? 0);
+    @endphp
 
     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
         <div>
@@ -60,6 +64,21 @@
                         class="form-control @error('description') is-invalid @enderror"
                     >
                     @error('description')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Service</label>
+                    <select name="service_id" class="form-select @error('service_id') is-invalid @enderror" required>
+                        <option value="">Select Service</option>
+                        @foreach ($services as $service)
+                            <option value="{{ $service->ID }}" @selected($selectedServiceId === (int) $service->ID)>
+                                {{ $service->ServiceName }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('service_id')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>

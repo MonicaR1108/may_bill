@@ -35,6 +35,26 @@ CREATE TABLE IF NOT EXISTS `item_master` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS `service_master` (
+  `ID` INT(11) NOT NULL AUTO_INCREMENT,
+  `ServiceName` VARCHAR(100) NOT NULL,
+  `Description` VARCHAR(100) NULL,
+  `Status` VARCHAR(100) NOT NULL,
+  `Created_by` VARCHAR(100) NOT NULL DEFAULT '',
+  `Created_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_by` VARCHAR(100) NOT NULL DEFAULT '',
+  `updated_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `service_master_items` (
+  `service_id` INT(11) NOT NULL,
+  `item_id` INT(11) NOT NULL,
+  PRIMARY KEY (`service_id`, `item_id`),
+  KEY `service_master_items_service_id_index` (`service_id`),
+  KEY `service_master_items_item_id_index` (`item_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- Default Admin Credentials
 -- Username: admin
 -- Password: Admin@12345

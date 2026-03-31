@@ -41,6 +41,14 @@
                     <div class="fw-semibold">{{ $item->Description ?: '—' }}</div>
                 </div>
 
+                <div class="col-12">
+                    <div class="text-muted small mb-2">Service</div>
+                    @if ($item->service)
+                        <span class="badge text-bg-light border text-dark">{{ $item->service->ServiceName }}</span>
+                    @else
+                        <div class="text-muted">Unassigned.</div>
+                    @endif
+                </div>
                 <div class="col-md-6">
                     <div class="text-muted small">Created On</div>
                     <div class="fw-semibold">@dmy($item->Created_on) <span class="text-muted">(@timehm($item->Created_on))</span></div>
@@ -53,3 +61,5 @@
         </div>
     </div>
 @endsection
+
+

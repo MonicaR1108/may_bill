@@ -12,11 +12,11 @@
                             <img
                                 class="login-brand-logo"
                                 src="{{ asset('assets/logo_netautocare1.png') }}?v={{ @filemtime(public_path('assets/logo_netautocare1.png')) }}"
-                                alt="Garage Bill"
+                                alt="May Bill"
                             >
 
                             <h1 class="login-hero-title">
-                                Streamline your garage's billing<br>
+                                Streamline your May's billing<br>
                                 and operations.
                             </h1>
                         </div>
@@ -131,3 +131,4 @@
         });
     </script>
 @endsection
+

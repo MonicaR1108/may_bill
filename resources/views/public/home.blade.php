@@ -1,6 +1,6 @@
 @extends('public.layouts.app')
 
-@section('title', 'Garage Bill')
+@section('title', 'May Bill')
 
 @section('content')
     <style>
@@ -61,7 +61,7 @@
 
     <div class="public-home-wrap">
         <div class="public-home-card text-center">
-            <img class="public-home-logo" src="{{ asset('assets/logo_netautocare1.png') }}" alt="Garage Bill">
+            <img class="public-home-logo" src="{{ asset('assets/logo_netautocare1.png') }}" alt="May Bill">
 
             @if (session()->has('password_setup_user_id'))
                 <div class="public-home-title fs-5">Create your password</div>
@@ -87,7 +87,7 @@
                 </form>
             @else
                 <div class="mt-4 text-muted">
-                    Welcome to Garage Bill.
+                    Welcome to May Bill.
                 </div>
 
                 <div class="mt-4">
@@ -99,3 +99,4 @@
         </div>
     </div>
 @endsection
+

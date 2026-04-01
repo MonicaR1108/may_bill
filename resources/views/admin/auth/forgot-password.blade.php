@@ -12,7 +12,7 @@
                             <img
                                 class="login-brand-logo"
                                 src="{{ asset('assets/logo_netautocare1.png') }}?v={{ @filemtime(public_path('assets/logo_netautocare1.png')) }}"
-                                alt="Garage Bill"
+                                alt="May Bill"
                             >
 
                             <h1 class="login-hero-title">
@@ -72,3 +72,4 @@
         </div>
     </div>
 @endsection
+

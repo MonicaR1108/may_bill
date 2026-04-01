@@ -3,10 +3,10 @@
   --sidebar-collapsed-width: 76px;
   --topbar-height: 64px;
   /* Matches the admin login theme */
-  --brand-deep: #50417d;
-  --brand: #846acd;
-  --brand-rgb: 132, 106, 205;
-  --brand-accent: #846acd;
+  --brand-deep: #234435;
+  --brand: #3f7f4a;
+  --brand-rgb: 63, 127, 74;
+  --brand-accent: #3f7f4a;
 
   --app-bg: radial-gradient(1200px 600px at 10% 30%, rgba(132,106,205,.18), transparent 60%),
             radial-gradient(900px 500px at 80% 70%, rgba(132,106,205,.10), transparent 55%),

@@ -51,7 +51,14 @@
 
     <div class="collapse mb-4 {{ $hasAddErrors ? 'show' : '' }}" id="addMasterItem">
         <div class="card card-soft rounded-4">
-            <div class="card-body p-4">
+            <div class="card-body p-4 position-relative">
+                <button
+                    type="button"
+                    class="btn-close position-absolute top-0 end-0 m-3"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#addMasterItem"
+                    aria-label="Close"
+                ></button>
                 <form method="POST" action="{{ route('admin.master-items.store') }}" class="row g-3 align-items-end" novalidate>
                     @csrf
                     <div class="col-md-6">
@@ -79,16 +86,6 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    <div class="col-md-2">
-                        <label class="form-label">Status</label>
-                        <select name="status" class="form-select @error('status') is-invalid @enderror" required>
-                            <option value="Active" @selected(old('status', 'Active') === 'Active')>Active</option>
-                            <option value="Inactive" @selected(old('status') === 'Inactive')>Inactive</option>
-                        </select>
-                        @error('status')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
                     <div class="col-md-4">
                         <label class="form-label">Service</label>
                         <select name="service_id" class="form-select @error('service_id') is-invalid @enderror" required>
@@ -100,6 +97,16 @@
                             @endforeach
                         </select>
                         @error('service_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Status</label>
+                        <select name="status" class="form-select @error('status') is-invalid @enderror" required>
+                            <option value="Active" @selected(old('status', 'Active') === 'Active')>Active</option>
+                            <option value="Inactive" @selected(old('status') === 'Inactive')>Inactive</option>
+                        </select>
+                        @error('status')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>

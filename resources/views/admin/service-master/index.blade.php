@@ -23,7 +23,14 @@
 
     <div class="collapse mb-4" id="addServiceMaster">
         <div class="card card-soft rounded-4">
-            <div class="card-body p-4">
+            <div class="card-body p-4 position-relative">
+                <button
+                    type="button"
+                    class="btn-close position-absolute top-0 end-0 m-3"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#addServiceMaster"
+                    aria-label="Close"
+                ></button>
                 <form method="POST" action="{{ route('admin.service-master.store') }}" class="row g-3 align-items-end" novalidate>
                     @csrf
                     <div class="col-md-6">

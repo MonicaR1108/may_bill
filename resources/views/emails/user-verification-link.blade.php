@@ -34,9 +34,10 @@
             </p>
         </div>
         <div style="text-align:center; color:#9ca3af; font-size:12px; margin-top:14px;">
-            May Bill
+            Garage Bill
         </div>
     </div>
 </body>
 </html>
+
 

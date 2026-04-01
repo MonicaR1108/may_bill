@@ -96,7 +96,7 @@
                                                 </button>
                                             </form>
                                         @endif
-                                        <form method="POST" action="{{ route('admin.user-details.destroy', $user) }}" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this user?')">
+                                        <form method="POST" action="{{ route('admin.user-details.destroy', $user) }}" class="d-inline js-confirm-delete" data-confirm-message="Do you want to delete this user?">
                                             @csrf
                                             @method('DELETE')
                                             <button class="action-btn action-delete" type="submit" title="Delete" aria-label="Delete">

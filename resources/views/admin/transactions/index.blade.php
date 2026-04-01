@@ -41,9 +41,15 @@
                 @endif
             </div>
         </div>
-        <a href="{{ route('admin.transactions.index') }}" class="btn btn-sm btn-outline-secondary">
-            <i class="bi bi-arrow-clockwise me-1"></i>Reset
-        </a>
+        @if ($isUserFiltered)
+            <a href="{{ route('admin.transactions.index') }}" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i>Back
+            </a>
+        @else
+            <a href="{{ route('admin.transactions.index') }}" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-arrow-clockwise me-1"></i>Reset
+            </a>
+        @endif
     </div>
 
     <div class="card card-soft rounded-4 mb-3">

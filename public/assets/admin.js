@@ -117,6 +117,43 @@
 
   window.addEventListener("pageshow", () => setLoading(false));
 
+  // Custom delete confirmation modal (avoid browser confirm).
+  const confirmDeleteModal = document.getElementById("confirmDeleteModal");
+  if (confirmDeleteModal) {
+    const messageEl = confirmDeleteModal.querySelector("[data-confirm-message]");
+    const submitBtn = confirmDeleteModal.querySelector("[data-confirm-submit]");
+    const deleteForms = Array.from(document.querySelectorAll("form.js-confirm-delete"));
+    const fallbackMessage = "Do you want to delete this item?";
+    const bsModal = typeof bootstrap !== "undefined" ? new bootstrap.Modal(confirmDeleteModal) : null;
+    let pendingForm = null;
+
+    const resetModalState = () => {
+      pendingForm = null;
+      if (submitBtn) submitBtn.disabled = false;
+    };
+
+    deleteForms.forEach((form) => {
+      form.addEventListener("submit", (e) => {
+        if (!bsModal) return;
+        e.preventDefault();
+        pendingForm = form;
+        const msg = form.getAttribute("data-confirm-message") || fallbackMessage;
+        if (messageEl) messageEl.textContent = msg;
+        bsModal.show();
+      });
+    });
+
+    if (submitBtn) {
+      submitBtn.addEventListener("click", () => {
+        if (!pendingForm) return;
+        submitBtn.disabled = true;
+        pendingForm.submit();
+      });
+    }
+
+    confirmDeleteModal.addEventListener("hidden.bs.modal", resetModalState);
+  }
+
   document.addEventListener("click", (e) => {
     const a = e.target && e.target.closest ? e.target.closest("a") : null;
     if (!a) return;
@@ -182,5 +219,123 @@
     } else {
       counterEls.forEach(animateCounter);
     }
+  }
+
+  // Tooltips for collapsed sidebar (show on hover only when collapsed).
+  const tooltipTargets = Array.from(document.querySelectorAll("[data-collapsed-tooltip]"));
+  if (tooltipTargets.length && typeof bootstrap !== "undefined") {
+    const tooltips = new Map();
+    const popovers = new Map();
+
+    const buildMenuHtml = (items = [], title = "") => {
+      if (!items.length) return "";
+      const links = items
+        .map((item) => `<a class="sidebar-tooltip-link" href="${item.href}">${item.label}</a>`)
+        .join("");
+      const heading = title ? `<div class="sidebar-tooltip-title">${title}</div>` : "";
+      return `<div class="sidebar-tooltip-menu">${heading}${links}</div>`;
+    };
+
+    tooltipTargets.forEach((el) => {
+      const title = el.getAttribute("data-collapsed-tooltip") || "";
+      if (!title) return;
+      if (el.hasAttribute("title")) {
+        el.removeAttribute("title");
+      }
+
+      const itemsRaw = el.getAttribute("data-collapsed-tooltip-items");
+      const items = itemsRaw ? JSON.parse(itemsRaw) : [];
+
+      if (items.length) {
+        const instance = new bootstrap.Popover(el, {
+          trigger: "manual",
+          placement: "right",
+          html: true,
+          sanitize: false,
+          content: buildMenuHtml(items, title),
+          customClass: "sidebar-tooltip-popover",
+        });
+        popovers.set(el, instance);
+      } else {
+        el.setAttribute("data-bs-toggle", "tooltip");
+        el.setAttribute("data-bs-title", title);
+        const instance = new bootstrap.Tooltip(el, {
+          trigger: "manual",
+          placement: "right",
+          customClass: "sidebar-tooltip-popover",
+        });
+        tooltips.set(el, instance);
+      }
+    });
+
+    const setTooltipState = () => {
+      const collapsed = document.body.classList.contains("sidebar-collapsed");
+      tooltips.forEach((tt) => (collapsed ? tt.enable() : (tt.hide(), tt.disable())));
+      popovers.forEach((pp) => (collapsed ? pp.enable() : (pp.hide(), pp.disable())));
+    };
+
+    const attachHover = (el, instance, type) => {
+      let hideTimer;
+      const show = () => {
+        if (!document.body.classList.contains("sidebar-collapsed")) return;
+        if (hideTimer) window.clearTimeout(hideTimer);
+        instance.show();
+      };
+      const scheduleHide = () => {
+        hideTimer = window.setTimeout(() => {
+          const tip = instance.getTipElement ? instance.getTipElement() : null;
+          if (tip && tip.matches && tip.matches(":hover")) return;
+          instance.hide();
+        }, 400);
+      };
+
+      el.addEventListener("mouseenter", show);
+      el.addEventListener("mouseleave", scheduleHide);
+
+      if (type === "popover") {
+        el.addEventListener("shown.bs.popover", () => {
+          const tip = instance.getTipElement();
+          if (!tip) return;
+          tip.addEventListener("mouseenter", () => {
+            if (hideTimer) window.clearTimeout(hideTimer);
+          });
+          tip.addEventListener("mouseleave", scheduleHide);
+        });
+      }
+    };
+
+    tooltips.forEach((instance, el) => attachHover(el, instance, "tooltip"));
+    popovers.forEach((instance, el) => attachHover(el, instance, "popover"));
+
+    setTooltipState();
+
+    if (toggleButton) {
+      toggleButton.addEventListener("click", () => {
+        window.setTimeout(setTooltipState, 0);
+      });
+    }
+  }
+
+  // Auto-submit search forms while typing (with debounce).
+  const autoSubmitForms = Array.from(document.querySelectorAll("form[data-auto-submit]"));
+  if (autoSubmitForms.length) {
+    const debounce = (fn, wait) => {
+      let t;
+      return (...args) => {
+        window.clearTimeout(t);
+        t = window.setTimeout(() => fn(...args), wait);
+      };
+    };
+
+    autoSubmitForms.forEach((form) => {
+      const input = form.querySelector("input[type='text'], input[type='search']");
+      if (!input) return;
+
+      const submit = debounce(() => {
+        if (document.activeElement === input) form.requestSubmit();
+      }, 350);
+
+      input.addEventListener("input", submit);
+    });
   }
 })();

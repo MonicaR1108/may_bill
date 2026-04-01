@@ -8,21 +8,30 @@
         $dir = $dir ?? request('dir', 'desc');
         $services = $services ?? collect();
         $selectedService = (int) ($selectedService ?? request('service', 0));
+        $search = (string) ($search ?? request('q', ''));
 
         $toggleDir = fn (string $col) => ($sort === $col && $dir === 'asc') ? 'desc' : 'asc';
         $arrow = function (string $col) use ($sort, $dir) {
             if ($sort !== $col) return '';
             return $dir === 'asc' ? ' ↑' : ' ↓';
         };
-        $sortLink = fn () => route('admin.master-items.index', ['sort' => 'id', 'dir' => $toggleDir('id'), 'service' => $selectedService]);
+        $sortLink = fn () => route('admin.master-items.index', ['sort' => 'id', 'dir' => $toggleDir('id'), 'service' => $selectedService, 'q' => $search]);
         $oldServiceId = (int) old('service_id', 0);
+        $hasAddErrors = $errors->has('name') || $errors->has('description') || $errors->has('status') || $errors->has('service_id');
     @endphp
 
     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
         <h1 class="h4 mb-0">Master Items</h1>
         <div class="d-flex align-items-center gap-2 flex-wrap">
-            <form method="GET" action="{{ route('admin.master-items.index') }}" class="d-flex align-items-center gap-2">
-                <label class="text-muted small mb-0">Filter by Service</label>
+            <form method="GET" action="{{ route('admin.master-items.index') }}" class="d-flex align-items-center gap-2 flex-nowrap" data-auto-submit>
+                <input
+                    type="text"
+                    name="q"
+                    value="{{ $search }}"
+                    class="form-control form-control-sm"
+                    placeholder="Search items..."
+                >
+                <label class="text-muted small mb-0">Filter</label>
                 <select name="service" class="form-select form-select-sm" onchange="this.form.submit()">
                     <option value="0">All Services</option>
                     @foreach ($services as $service)
@@ -34,13 +43,13 @@
                 <input type="hidden" name="sort" value="{{ $sort }}">
                 <input type="hidden" name="dir" value="{{ $dir }}">
             </form>
-            <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#addMasterItem" aria-expanded="false" aria-controls="addMasterItem">
+            <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#addMasterItem" aria-expanded="{{ $hasAddErrors ? 'true' : 'false' }}" aria-controls="addMasterItem">
                 <i class="bi bi-plus-circle me-2"></i>Add Item
             </button>
         </div>
     </div>
 
-    <div class="collapse mb-4" id="addMasterItem">
+    <div class="collapse mb-4 {{ $hasAddErrors ? 'show' : '' }}" id="addMasterItem">
         <div class="card card-soft rounded-4">
             <div class="card-body p-4">
                 <form method="POST" action="{{ route('admin.master-items.store') }}" class="row g-3 align-items-end" novalidate>
@@ -170,7 +179,7 @@
                                         <a class="action-btn action-edit" href="{{ route('admin.master-items.edit', ['token' => $token]) }}" title="Edit">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
-                                        <form method="POST" action="{{ route('admin.master-items.destroy', ['token' => $token]) }}" onsubmit="return confirm('Are you sure you want to delete this item?')">
+                                        <form method="POST" action="{{ route('admin.master-items.destroy', ['token' => $token]) }}" class="js-confirm-delete" data-confirm-message="Do you want to delete this item?">
                                             @csrf
                                             @method('DELETE')
                                             <button class="action-btn action-delete" type="submit" title="Delete">

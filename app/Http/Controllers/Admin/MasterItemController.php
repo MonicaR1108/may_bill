@@ -16,6 +16,7 @@ class MasterItemController extends Controller
         $sort = (string) request('sort', '');
         $dir = strtolower((string) request('dir', 'desc')) === 'asc' ? 'asc' : 'desc';
         $serviceFilter = (int) request('service', 0);
+        $search = trim((string) request('q', ''));
 
         // Sorting is intentionally limited to S.No (ID) only.
         if ($sort !== 'id') {
@@ -36,6 +37,13 @@ class MasterItemController extends Controller
             $query->where('service_id', $serviceFilter);
         }
 
+        if ($search !== '') {
+            $query->where(function ($q) use ($search) {
+                $q->where('ItemName', 'like', "%{$search}%")
+                    ->orWhere('Description', 'like', "%{$search}%");
+            });
+        }
+
         if ($sort === 'id') {
             $query->orderBy('ID', $dir);
         } else {
@@ -54,6 +62,7 @@ class MasterItemController extends Controller
             'hasPrice' => (bool) $priceColumn,
             'services' => Service::query()->orderBy('ServiceName')->get(['ID', 'ServiceName', 'Status']),
             'selectedService' => $serviceFilter,
+            'search' => $search,
         ]);
     }
 
@@ -79,12 +88,19 @@ class MasterItemController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:190'],
-            'description' => ['nullable', 'string', 'max:100'],
-            'status' => ['required', 'in:Active,Inactive'],
-            'service_id' => ['required', 'integer', 'exists:services,ID'],
-        ]);
+        $validated = $request->validate(
+            [
+                'name' => ['required', 'string', 'max:190'],
+                'description' => ['nullable', 'string', 'max:100'],
+                'status' => ['required', 'in:Active,Inactive'],
+                'service_id' => ['required', 'integer', 'min:1', 'exists:services,ID'],
+            ],
+            [
+                'service_id.required' => 'Please select the service.',
+                'service_id.min' => 'Please select the service.',
+                'service_id.exists' => 'Please select the service.',
+            ]
+        );
 
         $admin = Auth::guard('admin')->user();
         $by = $admin?->username ?? '';
@@ -112,7 +128,7 @@ class MasterItemController extends Controller
             'name' => ['required', 'string', 'max:190'],
             'description' => ['nullable', 'string', 'max:100'],
             'status' => ['required', 'in:Active,Inactive'],
-            'service_id' => ['required', 'integer', 'exists:services,ID'],
+            'service_id' => ['required', 'integer', 'min:1', 'exists:services,ID'],
         ]);
 
         $admin = Auth::guard('admin')->user();

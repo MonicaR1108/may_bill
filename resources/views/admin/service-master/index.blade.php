@@ -5,9 +5,20 @@
 @section('content')
     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
         <h1 class="h4 mb-0">Service Master</h1>
-        <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#addServiceMaster" aria-expanded="false" aria-controls="addServiceMaster">
-            <i class="bi bi-plus-circle me-2"></i>Add Service
-        </button>
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            <form method="GET" action="{{ route('admin.service-master.index') }}" class="d-flex align-items-center gap-2 flex-wrap" data-auto-submit>
+                <input
+                    type="text"
+                    name="q"
+                    value="{{ $search ?? request('q', '') }}"
+                    class="form-control form-control-sm"
+                    placeholder="Search services..."
+                >
+            </form>
+            <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#addServiceMaster" aria-expanded="false" aria-controls="addServiceMaster">
+                <i class="bi bi-plus-circle me-2"></i>Add Service
+            </button>
+        </div>
     </div>
 
     <div class="collapse mb-4" id="addServiceMaster">
@@ -93,7 +104,7 @@
                                         <a class="action-btn action-edit" href="{{ route('admin.service-master.edit', ['token' => $token]) }}" title="Edit">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
-                                        <form method="POST" action="{{ route('admin.service-master.destroy', ['token' => $token]) }}" onsubmit="return confirm('Are you sure you want to delete this service?')">
+                                        <form method="POST" action="{{ route('admin.service-master.destroy', ['token' => $token]) }}" class="js-confirm-delete" data-confirm-message="Do you want to delete this service?">
                                             @csrf
                                             @method('DELETE')
                                             <button class="action-btn action-delete" type="submit" title="Delete">

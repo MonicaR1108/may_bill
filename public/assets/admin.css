@@ -93,6 +93,7 @@ body.admin-body{
   text-decoration: none;
   position: relative;
   transition: background-color .16s ease, color .16s ease, transform .16s ease;
+  min-height: 40px;
 }
 
 .sidebar-sublink:hover{
@@ -127,7 +128,7 @@ body.admin-body{
 
 .sidebar-sublink i{
   font-size: 1rem;
-  width: 18px;
+  width: 20px;
   text-align: center;
 }
 
@@ -159,6 +160,7 @@ body.admin-body{
   text-decoration: none;
   position: relative;
   transition: background-color .16s ease, color .16s ease, transform .16s ease;
+  min-height: 44px;
 }
 
 .sidebar-link:hover{
@@ -528,6 +530,31 @@ body.admin-body{
 .action-edit{ background: var(--bs-primary); }
 .action-delete{ background: #dc3545; } /* bootstrap danger */
 
+/* Place confirmation modal near the top like browser alert. */
+.modal.modal-top .modal-dialog {
+  margin-top: 1rem;
+}
+
+/* Make confirm modal smaller and remove separator lines. */
+#confirmDeleteModal .modal-dialog {
+  max-width: 360px;
+}
+
+#confirmDeleteModal .modal-content {
+  border-radius: 12px;
+}
+
+#confirmDeleteModal .modal-header,
+#confirmDeleteModal .modal-footer {
+  border: 0;
+  padding-bottom: 0.25rem;
+}
+
+#confirmDeleteModal .modal-body {
+  padding-top: 0.5rem;
+  padding-bottom: 0.75rem;
+}
+
 .status-select{
   width: auto;
   min-width: 98px;
@@ -644,6 +671,11 @@ body.sidebar-collapsed .admin-content{
 /* Smooth desktop collapse (avoid flicker) */
 body.sidebar-collapsed .sidebar-link{
   justify-content: center;
+  padding-left: 8px;
+  padding-right: 8px;
+  width: 44px;
+  height: 44px;
+  margin: 0 auto;
 }
 
 .sidebar-link .label{
@@ -665,6 +697,11 @@ body.sidebar-collapsed .sidebar-subnav{
 
 body.sidebar-collapsed .sidebar-sublink{
   justify-content: center;
+  padding-left: 8px;
+  padding-right: 8px;
+  width: 44px;
+  height: 44px;
+  margin: 0 auto;
 }
 
 body.sidebar-collapsed .sidebar-sublink .label{
@@ -674,6 +711,67 @@ body.sidebar-collapsed .sidebar-sublink .label{
   width: 0;
   overflow: hidden;
   pointer-events: none;
+}
+
+body.sidebar-collapsed .sidebar-group-toggle .sidebar-chevron{
+  display: none;
+}
+
+body.sidebar-collapsed .sidebar-link::before,
+body.sidebar-collapsed .sidebar-sublink::before{
+  left: 4px;
+  right: auto;
+}
+
+/* Sidebar tooltip menu (for collapsed groups). */
+.sidebar-tooltip-popover .popover-body{
+  padding: 0.55rem 0.65rem;
+  background: #2f343a;
+  color: #e5e7eb;
+  border-radius: 6px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.22);
+  min-width: 190px;
+}
+
+.sidebar-tooltip-popover .tooltip-inner{
+  padding: 0.55rem 0.65rem;
+  background: #2f343a;
+  color: #e5e7eb;
+  border-radius: 6px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.22);
+  min-width: 190px;
+}
+
+.sidebar-tooltip-popover .popover-arrow,
+.sidebar-tooltip-popover .tooltip-arrow{
+  display: none;
+}
+
+.sidebar-tooltip-menu{
+  display: grid;
+  gap: 6px;
+}
+
+.sidebar-tooltip-title{
+  font-weight: 700;
+  font-size: .85rem;
+  color: #f9fafb;
+  padding-bottom: 2px;
+}
+
+.sidebar-tooltip-link{
+  display: block;
+  font-size: .85rem;
+  color: #cbd5f5;
+  text-decoration: none;
+  padding: 4px 2px;
+  border-radius: 4px;
+}
+
+.sidebar-tooltip-link:hover{
+  color: #fff;
+  background: rgba(255,255,255,.08);
+  text-decoration: none;
 }
 
 /* Mobile: sidebar overlays content */

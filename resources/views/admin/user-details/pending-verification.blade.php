@@ -36,7 +36,7 @@
                 </button>
             </form>
 
-            <form method="POST" action="{{ route('admin.user-details.destroy', $user) }}" class="d-inline ms-2" onsubmit="return confirm('Are you sure you want to delete this user?')">
+            <form method="POST" action="{{ route('admin.user-details.destroy', $user) }}" class="d-inline ms-2 js-confirm-delete" data-confirm-message="Do you want to delete this user?">
                 @csrf
                 @method('DELETE')
                 <button class="btn btn-outline-danger" type="submit">

@@ -11,14 +11,20 @@ class ServiceMasterController extends Controller
 {
     public function index()
     {
+        $search = trim((string) request('q', ''));
+
         $services = Service::query()
             ->withCount('items')
-            ->orderBy('ID')
+            ->when($search !== '', function ($q) use ($search) {
+                $q->where('ServiceName', 'like', "%{$search}%");
+            })
+            ->orderByDesc('ID')
             ->paginate(15)
             ->withQueryString();
 
         return view('admin.service-master.index', [
             'services' => $services,
+            'search' => $search,
         ]);
     }
 

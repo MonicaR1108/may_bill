@@ -9,9 +9,9 @@
     <style>
         body{
             min-height: 100vh;
-            background: radial-gradient(1200px 600px at 12% 30%, rgba(63,127,74,.18), transparent 60%),
-                        radial-gradient(900px 500px at 80% 70%, rgba(63,127,74,.10), transparent 55%),
-                        linear-gradient(135deg, #f8fbf8, #eef6ec);
+            background: radial-gradient(1200px 700px at 12% 28%, rgba(255,255,255,.92), rgba(255,255,255,.2) 55%, transparent 75%),
+                        radial-gradient(980px 620px at 82% 56%, rgba(120,176,106,.24), rgba(120,176,106,.12) 52%, transparent 75%),
+                        linear-gradient(135deg, #f8fbf8, #edf5ea);
         }
 
         .auth-page{
@@ -60,13 +60,13 @@
         }
 
         .auth-input .input-group-text{
-            background: #f3f6fb;
+            background: #eef2ff;
             border-right: 0;
         }
 
         .auth-input .form-control{
             border-left: 0;
-            background: #f3f6fb;
+            background: #eef2ff;
         }
 
         .auth-input .form-control:focus{
@@ -75,7 +75,7 @@
         }
 
         .auth-input .password-toggle{
-            background: #f3f6fb;
+            background: #eef2ff;
             cursor: pointer;
             user-select: none;
         }
@@ -117,9 +117,9 @@
             position: absolute;
             inset: 0;
             background:
-                radial-gradient(1200px 700px at 15% 35%, rgba(255,255,255,.78), rgba(255,255,255,.18) 55%, transparent 75%),
-                radial-gradient(1100px 700px at 82% 55%, rgba(63,127,74,.22), rgba(63,127,74,.10) 50%, transparent 75%),
-                linear-gradient(135deg, #f8fbf8, #eef6ec);
+                radial-gradient(1200px 720px at 15% 35%, rgba(255,255,255,.84), rgba(255,255,255,.18) 55%, transparent 75%),
+                radial-gradient(1100px 720px at 82% 56%, rgba(120,176,106,.26), rgba(120,176,106,.12) 52%, transparent 75%),
+                linear-gradient(135deg, #f8fbf8, #edf5ea);
             filter: saturate(1.05);
             z-index: -2;
         }
@@ -131,7 +131,7 @@
             right: -18%;
             width: 62%;
             height: 124%;
-            background: radial-gradient(circle at 30% 40%, rgba(63,127,74,.42), rgba(63,127,74,.18) 55%, transparent 78%);
+            background: radial-gradient(circle at 30% 40%, rgba(120,176,106,.48), rgba(120,176,106,.22) 55%, transparent 78%);
             transform: rotate(6deg);
             z-index: -1;
         }
@@ -178,7 +178,7 @@
             min-width: 0;
             max-width: 34ch;
             overflow-wrap: anywhere;
-            background: linear-gradient(90deg, #234435, #3f7f4a, #234435);
+            background: linear-gradient(90deg, #274636, #3f7f4a, #274636);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -188,7 +188,7 @@
             position: relative;
             padding: 34px 18px;
             border-radius: 22px;
-            background: linear-gradient(180deg, rgba(63,127,74,.22), rgba(63,127,74,.10));
+            background: linear-gradient(180deg, rgba(120,176,106,.42), rgba(120,176,106,.18));
             border: 1px solid rgba(255,255,255,.38);
             box-shadow: 0 22px 60px rgba(0,0,0,.18);
             backdrop-filter: blur(8px);
@@ -201,7 +201,7 @@
         }
 
         .admin-login-page .login-card{
-            background: rgba(255,255,255,.62);
+            background: rgba(255,255,255,.78);
             border: 1px solid rgba(0,0,0,.10);
             border-radius: 22px;
             box-shadow: 0 18px 48px rgba(0,0,0,.18);
@@ -224,15 +224,15 @@
             border-radius: 14px;
             font-weight: 900;
             letter-spacing: .2px;
-            background: linear-gradient(90deg, #234435, #3f7f4a);
+            background: linear-gradient(90deg, #274636, #3f7f4a);
             border: 0;
-            box-shadow: 0 14px 30px rgba(35,68,53,.28);
+            box-shadow: 0 14px 30px rgba(39,70,54,.28);
             transition: transform .14s ease, box-shadow .18s ease, filter .18s ease;
         }
 
         .admin-login-page .login-submit:hover{
             transform: translateY(-1px);
-            box-shadow: 0 18px 38px rgba(35,68,53,.34);
+            box-shadow: 0 18px 38px rgba(39,70,54,.34);
             filter: brightness(1.02);
         }
 

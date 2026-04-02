@@ -11,7 +11,7 @@ class Ui
     {
         $dt = self::toCarbon($value);
 
-        return $dt ? $dt->format('d/m/Y') : $placeholder;
+        return $dt ? $dt->format('d M Y') : $placeholder;
     }
 
     public static function time(mixed $value, string $placeholder = '—'): string
@@ -43,4 +43,3 @@ class Ui
         }
     }
 }
-

@@ -18,6 +18,15 @@ class Service extends Model
         'Created_on',
     ];
 
+    public function getCreatedOnAttribute($value)
+    {
+        if ($value) {
+            return $value;
+        }
+
+        return $this->attributes['created_on'] ?? null;
+    }
+
     public function items()
     {
         return $this->hasMany(ItemMaster::class, 'service_id', 'ID');
